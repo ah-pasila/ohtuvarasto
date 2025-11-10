@@ -1,6 +1,5 @@
 import unittest
 from varasto import Varasto
-
 '''Tuodaan käyttöön yksikkötestauspaketti ja luokka Varasto'''
 
 # Huom. AI:n käyttö: testien lisäyksessä käytetty hyödyksi tekoälyn tuottamia
@@ -12,9 +11,9 @@ from varasto import Varasto
 # Ensimmäinen yritys ei kuitenkaan parantunut testikattavuutta, joten totestin test
 # coveragen olevan silti edelleen 98 %, jolloin sain ehdotuksia erilaisten reunatapausten
 # tutkimiseen etenkin kontruktoriin liittyen.
-# Tämäkään ei tuottanut haluttua tulosta. Tutkin tarkemmin coverage-kattavuusraporttia ja huomasin,
-# että tulostuksen oikeellisuuden testi puuttui. Tämän jälkeen annoin vielä kehotteen "Kyse oli
-# siitä, että tulostuksen oikeellisuus (viimeinen kohta) jäi testaamatta.
+# Tämäkään ei tuottanut haluttua tulosta. Tutkin tarkemmin coverage-kattavuusraporttia ja 
+# huomasin, että tulostuksen oikeellisuuden testi puuttui. Tämän jälkeen annoin 
+# vielä kehotteen "Kyse olisiitä, että tulostuksen oikeellisuus (viimeinen kohta) jäi testaamatta.
 # Kirjoita tätä varten testi."
 
 class TestVarasto(unittest.TestCase):
@@ -72,7 +71,7 @@ class TestVarasto(unittest.TestCase):
         self.assertAlmostEqual(self.varasto.saldo, 0)
 
     def test_liikaa_ei_voi_ottaa(self):
-        '''Testataan, ettei varastosta saa enemmän kuin siellä on ja se tyhjenee'''
+        '''Testataan, ettei saada enempää kuin on on ja varasto tyhjenee'''
         self.varasto.lisaa_varastoon(8)
         saatu_maara = self.varasto.ota_varastosta(10)
         self.assertAlmostEqual(saatu_maara, 8)
