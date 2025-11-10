@@ -1,7 +1,8 @@
 from varasto import Varasto
-
+"""Tuodaan Varasto-luokka"""
 
 def main():
+    """Ohjelman main-funktio"""
     mehua = Varasto(100.0)
     olutta = Varasto(100.0, 20.2)
 
