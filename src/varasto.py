@@ -1,9 +1,9 @@
 class Varasto:
 
-    # Tällä koodilla voi luoda Varasto-olioita
+    """ Tällä koodilla voi luoda Varasto-olioita"""
 
     def __init__(self, tilavuus, alku_saldo=0):
-        # Luodaan varasto-olio ja laitetaan alkutilavuus = 0
+        """ Luodaan varasto-olio ja laitetaan alkutilavuus = 0"""
         if tilavuus > 0.0:
             self.tilavuus = tilavuus
         else:
@@ -22,9 +22,11 @@ class Varasto:
 
     # huom: ominaisuus voidaan myös laskea. Ei tarvita erillistä kenttää viela_tilaa tms.
     def paljonko_mahtuu(self):
+        """Tarkistetaan jäljellä oleva tyhjä tila"""
         return self.tilavuus - self.saldo
 
     def lisaa_varastoon(self, maara):
+        """Lisätään x määrä varastoon"""
         if maara < 0:
             return
         if maara <= self.paljonko_mahtuu():
@@ -33,6 +35,7 @@ class Varasto:
             self.saldo = self.tilavuus
 
     def ota_varastosta(self, maara):
+        """Otetaan x määrä varastosta"""
         if maara < 0:
             return 0.0
         if maara > self.saldo:
@@ -46,4 +49,5 @@ class Varasto:
         return maara
 
     def __str__(self):
+        """Tulostusformaatti"""
         return f"saldo = {self.saldo}, vielä tilaa {self.paljonko_mahtuu()}"
