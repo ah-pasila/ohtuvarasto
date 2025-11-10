@@ -1,8 +1,9 @@
-'''Tällä koodilla voi luoda varasto-olioita'''
+'''Tällä luokalla voi luoda varasto-olioita'''
 class Varasto:
+    '''Varasto-luokan metodit'''
 
     def __init__(self, tilavuus, alku_saldo=0):
-        """ Luodaan varasto-olio ja laitetaan alkutilavuus = 0"""
+        '''Luodaan varasto-olio ja laitetaan alkutilavuus = 0'''
         if tilavuus > 0.0:
             self.tilavuus = tilavuus
         else:
