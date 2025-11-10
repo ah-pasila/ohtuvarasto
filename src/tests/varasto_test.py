@@ -2,12 +2,12 @@ import unittest
 from varasto import Varasto
 
 
-## Huom. AI:n käyttö: testien lisäyksessä käytetty hyödyksi tekoälyn tuottamia esimerkkejä sivulta https://ohjelmistotuotanto-hy.github.io/genai/#viikko-1---teht%C3%A4v%C3%A4-8
-## Huom2.AI:n käyttö: testikattavuuden ollessa 98 % tehty ChatGPT:lle kysely: "Minulla on seuraava koodi_ varasto.py. Koodille teen seuraavat testit. Testikattavuus on 98 %. Mikä testi jää puuttumaan? varasto_test.py"
-## Vastauksen perusteella lisätty yksi testi koskien sitä, palautuuko oikea arvo, kun varastosta yritetään ottaa enemmän kuin siellä on. 
-## Ensimmäinen yritys ei kuitenkaan parantunut testikattavuutta, joten totestin test coveragen olevan silti edelleen 98 %, jolloin sain ehdotuksia erilaisten reunatapausten tutkimiseen etenkin kontruktoriin liittyen.
-## Tämäkään ei tuottanut haluttua tulosta. Tutkin tarkemmin coverage-kattavuusraporttia ja huomasin, että tulostuksen oikeellisuuden testi puuttui.
-## Tämän jälkeen annoin vielä kehotteen "Kyse oli siitä, että tulostuksen oikeellisuus (viimeinen kohta) jäi testaamatta. Kirjoita tätä varten testi."
+# Huom. AI:n käyttö: testien lisäyksessä käytetty hyödyksi tekoälyn tuottamia esimerkkejä sivulta https://ohjelmistotuotanto-hy.github.io/genai/#viikko-1---teht%C3%A4v%C3%A4-8
+# Huom2.AI:n käyttö: testikattavuuden ollessa 98 % tehty ChatGPT:lle kysely: "Minulla on seuraava koodi_ varasto.py. Koodille teen seuraavat testit. Testikattavuus on 98 %. Mikä testi jää puuttumaan? varasto_test.py"
+# Vastauksen perusteella lisätty yksi testi koskien sitä, palautuuko oikea arvo, kun varastosta yritetään ottaa enemmän kuin siellä on.
+# Ensimmäinen yritys ei kuitenkaan parantunut testikattavuutta, joten totestin test coveragen olevan silti edelleen 98 %, jolloin sain ehdotuksia erilaisten reunatapausten tutkimiseen etenkin kontruktoriin liittyen.
+# Tämäkään ei tuottanut haluttua tulosta. Tutkin tarkemmin coverage-kattavuusraporttia ja huomasin, että tulostuksen oikeellisuuden testi puuttui.
+# Tämän jälkeen annoin vielä kehotteen "Kyse oli siitä, että tulostuksen oikeellisuus (viimeinen kohta) jäi testaamatta. Kirjoita tätä varten testi."
 
 
 class TestVarasto(unittest.TestCase):
