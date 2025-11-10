@@ -1,7 +1,7 @@
+""" Tällä koodilla voi luoda Varasto-olioita"""
+
 class Varasto:
-
-    """ Tällä koodilla voi luoda Varasto-olioita"""
-
+    
     def __init__(self, tilavuus, alku_saldo=0):
         """ Luodaan varasto-olio ja laitetaan alkutilavuus = 0"""
         if tilavuus > 0.0:

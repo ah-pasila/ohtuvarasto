@@ -1,5 +1,5 @@
-from varasto import Varasto
 """Tuodaan Varasto-luokka"""
+from varasto import Varasto
 
 def main():
     """Ohjelman main-funktio"""
