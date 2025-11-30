@@ -120,11 +120,11 @@
                 </div>
                 <div class="warehouse-actions">
                     <form action="{{ url_for('add_items', warehouse_id=id) }}" method="POST">
-                        <input type="number" name="amount" min="0" step="0.1" placeholder="Amount" required>
+                        <input type="number" name="amount" min="0.1" step="0.1" placeholder="Amount" required>
                         <button type="submit" class="add-btn">Add Items</button>
                     </form>
                     <form action="{{ url_for('remove_items', warehouse_id=id) }}" method="POST">
-                        <input type="number" name="amount" min="0" step="0.1" placeholder="Amount" required>
+                        <input type="number" name="amount" min="0.1" step="0.1" placeholder="Amount" required>
                         <button type="submit" class="remove-btn">Remove Items</button>
                     </form>
                     <form action="{{ url_for('delete_warehouse', warehouse_id=id) }}" method="POST">

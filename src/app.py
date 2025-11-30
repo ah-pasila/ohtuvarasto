@@ -1,10 +1,11 @@
 """Flask web application for warehouse management."""
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from varasto import Varasto
 
 
 app = Flask(__name__)
-app.secret_key = 'varasto-secret-key'
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
 
 # In-memory storage for warehouses and ID counter
 warehouses = {}
@@ -65,7 +66,7 @@ def add_items(warehouse_id):
 
     try:
         amount = float(request.form.get('amount', 0))
-        if amount < 0:
+        if amount <= 0:
             flash('Amount must be positive.', 'error')
             return redirect(url_for('index'))
 
@@ -95,7 +96,7 @@ def remove_items(warehouse_id):
 
     try:
         amount = float(request.form.get('amount', 0))
-        if amount < 0:
+        if amount <= 0:
             flash('Amount must be positive.', 'error')
             return redirect(url_for('index'))
 
@@ -112,4 +113,4 @@ def remove_items(warehouse_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.environ.get('FLASK_DEBUG', 'False').lower() == 'true')

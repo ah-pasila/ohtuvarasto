@@ -139,6 +139,15 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
         )
         self.assertIn(b'Amount must be positive', response.data)
 
+    def test_add_zero_items_fails(self):
+        """Test that adding zero amount shows error."""
+        self.client.post('/create', data={'capacity': '100'})
+
+        response = self.client.post(
+            '/add/1', data={'amount': '0'}, follow_redirects=True
+        )
+        self.assertIn(b'Amount must be positive', response.data)
+
     def test_add_invalid_amount(self):
         """Test that invalid amount shows error."""
         self.client.post('/create', data={'capacity': '100'})
@@ -197,6 +206,16 @@ class TestWarehouseRemoveItems(TestWarehouseAppBase):
 
         response = self.client.post(
             '/remove/1', data={'amount': '-10'}, follow_redirects=True
+        )
+        self.assertIn(b'Amount must be positive', response.data)
+
+    def test_remove_zero_items_fails(self):
+        """Test that removing zero amount shows error."""
+        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/add/1', data={'amount': '50'})
+
+        response = self.client.post(
+            '/remove/1', data={'amount': '0'}, follow_redirects=True
         )
         self.assertIn(b'Amount must be positive', response.data)
 
