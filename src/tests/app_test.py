@@ -79,7 +79,7 @@ class TestWarehouseCreate(TestWarehouseAppBase):
             '/create', data={'capacity': '100'}, follow_redirects=True
         )
         self.assertEqual(len(warehouses), 0)
-        self.assertIn(b'name is required', response.data)
+        self.assertIn(b'Warehouse name is required', response.data)
 
     def test_create_multiple_warehouses(self):
         """Test creating multiple warehouses."""
