@@ -32,10 +32,10 @@ class TestWarehouseIndex(TestWarehouseAppBase):
 
     def test_warehouse_displayed_on_index(self):
         """Test that created warehouse is displayed on index page."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.get('/')
-        self.assertIn(b'Warehouse 1', response.data)
+        self.assertIn(b'Test Warehouse', response.data)
         self.assertIn(b'Capacity: 100', response.data)
 
 
@@ -44,14 +44,15 @@ class TestWarehouseCreate(TestWarehouseAppBase):
 
     def test_create_warehouse_with_valid_capacity(self):
         """Test creating a warehouse with valid positive capacity."""
-        response = self.client.post('/create', data={'capacity': '100'})
+        response = self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(len(warehouses), 1)
         self.assertEqual(warehouses[1]['varasto'].tilavuus, 100)
+        self.assertEqual(warehouses[1]['name'], 'Test Warehouse')
 
     def test_create_warehouse_with_zero_capacity(self):
         """Test creating a warehouse with zero capacity is valid."""
-        response = self.client.post('/create', data={'capacity': '0'})
+        response = self.client.post('/create', data={'name': 'Empty Warehouse', 'capacity': '0'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(len(warehouses), 1)
         self.assertEqual(warehouses[1]['varasto'].tilavuus, 0)
@@ -59,7 +60,7 @@ class TestWarehouseCreate(TestWarehouseAppBase):
     def test_create_warehouse_with_negative_capacity_fails(self):
         """Test that creating a warehouse with negative capacity fails."""
         response = self.client.post(
-            '/create', data={'capacity': '-10'}, follow_redirects=True
+            '/create', data={'name': 'Bad Warehouse', 'capacity': '-10'}, follow_redirects=True
         )
         self.assertEqual(len(warehouses), 0)
         self.assertIn(b'Capacity must be 0 or positive', response.data)
@@ -67,16 +68,24 @@ class TestWarehouseCreate(TestWarehouseAppBase):
     def test_create_warehouse_with_invalid_capacity(self):
         """Test that invalid capacity value shows error."""
         response = self.client.post(
-            '/create', data={'capacity': 'invalid'}, follow_redirects=True
+            '/create', data={'name': 'Test', 'capacity': 'invalid'}, follow_redirects=True
         )
         self.assertEqual(len(warehouses), 0)
         self.assertIn(b'Invalid capacity value', response.data)
 
+    def test_create_warehouse_without_name_fails(self):
+        """Test that creating a warehouse without a name fails."""
+        response = self.client.post(
+            '/create', data={'capacity': '100'}, follow_redirects=True
+        )
+        self.assertEqual(len(warehouses), 0)
+        self.assertIn(b'name is required', response.data)
+
     def test_create_multiple_warehouses(self):
         """Test creating multiple warehouses."""
-        self.client.post('/create', data={'capacity': '100'})
-        self.client.post('/create', data={'capacity': '200'})
-        self.client.post('/create', data={'capacity': '50'})
+        self.client.post('/create', data={'name': 'Warehouse A', 'capacity': '100'})
+        self.client.post('/create', data={'name': 'Warehouse B', 'capacity': '200'})
+        self.client.post('/create', data={'name': 'Warehouse C', 'capacity': '50'})
 
         self.assertEqual(len(warehouses), 3)
         self.assertEqual(warehouses[1]['varasto'].tilavuus, 100)
@@ -89,7 +98,7 @@ class TestWarehouseDelete(TestWarehouseAppBase):
 
     def test_delete_warehouse(self):
         """Test deleting an existing warehouse."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.assertEqual(len(warehouses), 1)
 
         response = self.client.post('/delete/1')
@@ -107,7 +116,7 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
 
     def test_add_items_to_warehouse(self):
         """Test adding items to a warehouse."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.post('/add/1', data={'amount': '50'})
         self.assertEqual(response.status_code, 302)
@@ -115,7 +124,7 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
 
     def test_add_items_exceeding_capacity_fails(self):
         """Test that adding more items than capacity shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.post(
             '/add/1', data={'amount': '150'}, follow_redirects=True
@@ -132,7 +141,7 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
 
     def test_add_negative_items_fails(self):
         """Test that adding negative amount shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.post(
             '/add/1', data={'amount': '-10'}, follow_redirects=True
@@ -141,7 +150,7 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
 
     def test_add_zero_items_fails(self):
         """Test that adding zero amount shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.post(
             '/add/1', data={'amount': '0'}, follow_redirects=True
@@ -150,7 +159,7 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
 
     def test_add_invalid_amount(self):
         """Test that invalid amount shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.post(
             '/add/1', data={'amount': 'invalid'}, follow_redirects=True
@@ -159,7 +168,7 @@ class TestWarehouseAddItems(TestWarehouseAppBase):
 
     def test_capacity_not_exceeded_after_multiple_additions(self):
         """Test that capacity is not exceeded after multiple additions."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.client.post('/add/1', data={'amount': '40'})
         self.client.post('/add/1', data={'amount': '40'})
 
@@ -175,7 +184,7 @@ class TestWarehouseRemoveItems(TestWarehouseAppBase):
 
     def test_remove_items_from_warehouse(self):
         """Test removing items from a warehouse."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.client.post('/add/1', data={'amount': '50'})
 
         response = self.client.post('/remove/1', data={'amount': '20'})
@@ -184,7 +193,7 @@ class TestWarehouseRemoveItems(TestWarehouseAppBase):
 
     def test_remove_more_than_available(self):
         """Test removing more items than available."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.client.post('/add/1', data={'amount': '50'})
 
         self.client.post(
@@ -201,7 +210,7 @@ class TestWarehouseRemoveItems(TestWarehouseAppBase):
 
     def test_remove_negative_items_fails(self):
         """Test that removing negative amount shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.client.post('/add/1', data={'amount': '50'})
 
         response = self.client.post(
@@ -211,7 +220,7 @@ class TestWarehouseRemoveItems(TestWarehouseAppBase):
 
     def test_remove_zero_items_fails(self):
         """Test that removing zero amount shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
         self.client.post('/add/1', data={'amount': '50'})
 
         response = self.client.post(
@@ -221,7 +230,7 @@ class TestWarehouseRemoveItems(TestWarehouseAppBase):
 
     def test_remove_invalid_amount(self):
         """Test that invalid removal amount shows error."""
-        self.client.post('/create', data={'capacity': '100'})
+        self.client.post('/create', data={'name': 'Test Warehouse', 'capacity': '100'})
 
         response = self.client.post(
             '/remove/1', data={'amount': 'invalid'}, follow_redirects=True

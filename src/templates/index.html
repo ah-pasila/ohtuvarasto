@@ -54,6 +54,10 @@
             width: 80px;
             padding: 5px;
         }
+        input[type="text"] {
+            width: 200px;
+            padding: 5px;
+        }
         button {
             padding: 5px 10px;
             cursor: pointer;
@@ -102,8 +106,10 @@
     <div class="create-form">
         <h2>Create New Warehouse</h2>
         <form action="{{ url_for('create_warehouse') }}" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Warehouse name" required>
             <label for="capacity">Capacity:</label>
-            <input type="number" id="capacity" name="capacity" min="0" step="0.1" required>
+            <input type="number" id="capacity" name="capacity" min="0" step="1" required>
             <button type="submit" class="create-btn">Create Warehouse</button>
         </form>
     </div>
@@ -114,17 +120,17 @@
             <div class="warehouse-card">
                 <div class="warehouse-info">
                     <strong>{{ warehouse.name }}</strong><br>
-                    Capacity: {{ warehouse.varasto.tilavuus }}<br>
-                    Current stock: {{ warehouse.varasto.saldo }}<br>
-                    Available space: {{ warehouse.varasto.paljonko_mahtuu() }}
+                    Capacity: {{ warehouse.varasto.tilavuus|int }}<br>
+                    Current stock: {{ warehouse.varasto.saldo|int }}<br>
+                    Available space: {{ warehouse.varasto.paljonko_mahtuu()|int }}
                 </div>
                 <div class="warehouse-actions">
                     <form action="{{ url_for('add_items', warehouse_id=id) }}" method="POST">
-                        <input type="number" name="amount" min="0.1" step="0.1" placeholder="Amount" required>
+                        <input type="number" name="amount" min="1" step="1" placeholder="Amount" required>
                         <button type="submit" class="add-btn">Add Items</button>
                     </form>
                     <form action="{{ url_for('remove_items', warehouse_id=id) }}" method="POST">
-                        <input type="number" name="amount" min="0.1" step="0.1" placeholder="Amount" required>
+                        <input type="number" name="amount" min="1" step="1" placeholder="Amount" required>
                         <button type="submit" class="remove-btn">Remove Items</button>
                     </form>
                     <form action="{{ url_for('delete_warehouse', warehouse_id=id) }}" method="POST">

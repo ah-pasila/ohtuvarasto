@@ -28,17 +28,22 @@ def index():
 def create_warehouse():
     """Create a new warehouse with the specified capacity."""
     try:
-        capacity = float(request.form.get('capacity', 0))
+        capacity = int(request.form.get('capacity', 0))
         if capacity < 0:
             flash('Capacity must be 0 or positive.', 'error')
+            return redirect(url_for('index'))
+
+        name = request.form.get('name', '').strip()
+        if not name:
+            flash('Warehouse name is required.', 'error')
             return redirect(url_for('index'))
 
         warehouse_id = get_next_id()
         warehouses[warehouse_id] = {
             'varasto': Varasto(capacity),
-            'name': f'Warehouse {warehouse_id}'
+            'name': name
         }
-        flash(f'Warehouse {warehouse_id} created successfully.', 'success')
+        flash(f'Warehouse "{name}" created successfully.', 'success')
     except ValueError:
         flash('Invalid capacity value.', 'error')
 
@@ -65,7 +70,7 @@ def add_items(warehouse_id):
         return redirect(url_for('index'))
 
     try:
-        amount = float(request.form.get('amount', 0))
+        amount = int(request.form.get('amount', 0))
         if amount <= 0:
             flash('Amount must be positive.', 'error')
             return redirect(url_for('index'))
@@ -75,12 +80,13 @@ def add_items(warehouse_id):
 
         if amount > available_space:
             flash(
-                f'Cannot add {amount}. Only {available_space} space available.',
+                f'Cannot add {amount}. Only {int(available_space)} space available.',
                 'error'
             )
         else:
             varasto.lisaa_varastoon(amount)
-            flash(f'Added {amount} items to Warehouse {warehouse_id}.', 'success')
+            warehouse_name = warehouses[warehouse_id]['name']
+            flash(f'Added {amount} items to {warehouse_name}.', 'success')
     except ValueError:
         flash('Invalid amount value.', 'error')
 
@@ -95,15 +101,16 @@ def remove_items(warehouse_id):
         return redirect(url_for('index'))
 
     try:
-        amount = float(request.form.get('amount', 0))
+        amount = int(request.form.get('amount', 0))
         if amount <= 0:
             flash('Amount must be positive.', 'error')
             return redirect(url_for('index'))
 
         varasto = warehouses[warehouse_id]['varasto']
         removed = varasto.ota_varastosta(amount)
+        warehouse_name = warehouses[warehouse_id]['name']
         flash(
-            f'Removed {removed} items from Warehouse {warehouse_id}.',
+            f'Removed {int(removed)} items from {warehouse_name}.',
             'success'
         )
     except ValueError:
